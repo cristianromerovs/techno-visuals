@@ -1,89 +1,104 @@
 window.addEventListener("keyup", (e) => {
-    e.key === "1" && changeColor();
-    e.key === "2" && fontFx();
-    e.key === "3" && transitionLeft();
-    e.key === "4" && transitionCenter();
-    e.key === "5" && transitionRight();
+    e.key === "1" && hideContent();
+    e.key === "2" && changeColor();
+    e.key === "3" && fontFx();
+    e.key === "4" && transitionCarrouselOn();
+    e.key === "5" && transitionCarrouselOff();
+    e.key === "6" && rotateCenter();
+    e.key === "7" && pingFast();
 });
-let myBpm = 160;
+let myBpm = 140;
 const minuteINms = 60000;
 
 let calculateBpm = (minuteINms / myBpm);
 calculateBpm = String(calculateBpm).slice(0, 3);;
 calculateBpm = Number(calculateBpm);
 
-let alternate = false;
+let visualsPanel = document.querySelector('.visuals');
+let alternate, rotateToggle, pingToggle, hideToggle;
+alternate = rotateToggle = pingToggle = carrouselToggle = hideToggle = true;
 let colorChanger = 0;
+let carrouselChanger = 0;
+let intervalBpm, intervalColors, intervalCarrousel;
 
-function generatePassword() {
+const hideContent = () => {
+    hideToggle ? visualsPanel.style.opacity = "0" : visualsPanel.style.opacity = "1";
+    hideToggle = !hideToggle;
+}
+
+const rotateCenter = () => {
+    visualsPanel.classList.contains("ping") && visualsPanel.classList.remove("ping");
+    rotateToggle ? visualsPanel.classList.add("rotate-center") : (visualsPanel.classList.remove("rotate-center"));
+    rotateToggle = !rotateToggle;
+}
+
+const pingFast = () => {
+    visualsPanel.classList.contains("rotate-center") && visualsPanel.classList.remove("rotate-center");
+    pingToggle ? visualsPanel.classList.add("ping") : visualsPanel.classList.remove("ping");
+    pingToggle = !pingToggle;
+}
+
+const generateSymbols = () => {
     var length = 990,
         charset = "abcdefghijklmnopqrstuvwxyzABCEFGHIJKLMNPTUVWXYZ123456789¼½¾⅓⅔⅛⅜⅝≈>≥≧≩≫≳⋝÷∕≂⊟⊞⨁∟∠∡⊾⟀⦜⦛⦠√∛∜⍍≡≢⧥⩧⅀◊⟠⨌⨍⨏⨜⨛◜◝◞◟⤸⤹◆◇❖○◍●◐◑◒◓◔◕◖◗⬡⬢‰ⁿ¹²³§∞⌖◧◨◩◪▢▣▤▥▦▧▨▩▪▫▬▭▮▯▰▱◆◇◈◉◊○◌◎◘◙◚◛◜◝◞◟◠◡◦◫◬◭◮◯▲△▴▵▶▷▸▹►▻▼▽▾▿◀◁◂◃◄◅",
         retVal = "";
     for (var i = 0, n = charset.length; i < length; ++i) {
-        retVal += charset.charAt(Math.floor(Math.random() * n));
+        retVal += (charset.charAt(Math.floor(Math.random() * n)));
     }
-    visualsPanel.innerHTML = retVal
-    // alternate ? visualsPanel.innerHTML = retVal : visualsPanel.innerHTML = "";
+    visualsPanel.innerHTML = retVal;
 }
-
-let visualsPanel = document.querySelector('.visuals');
-
-let intervalId;
-intervalId && clearInterval(intervalId);
-intervalId = setInterval(generatePassword, calculateBpm);
-
-let btnColors = document.getElementById("btn-colors");
-let btnFontFx = document.getElementById("btn-font-fx");
-let btnTransitionLeft = document.getElementById("btn-transition-left");
-let btnTransitionCenter = document.getElementById("btn-transition-center");
-let btnTransitionRight = document.getElementById("btn-transition-right");
 
 const changeColor = () => {
+    intervalColors && clearInterval(intervalColors);
+    intervalColors = setInterval(changeColor, 10000);
     colorChanger += 1;
-    if (colorChanger === 1) {
-        visualsPanel.style.color = "rgb(255, 255, 255)";
-    } else if (colorChanger === 2) {
-        visualsPanel.style.color = "rgb(0, 255, 0)";
-    } else if (colorChanger === 3) {
-        visualsPanel.style.color = "rgb(255, 255, 0)";
-    } else if (colorChanger === 4) {
-        visualsPanel.style.color = "rgb(255, 0, 0)";
-        colorChanger = 0;
-    }
+    colorChanger === 1 && (visualsPanel.style.color = "rgb(255, 255, 255)");
+    colorChanger === 2 && (visualsPanel.style.color = "rgb(0, 255, 0)");
+    colorChanger === 3 && (visualsPanel.style.color = "rgb(255, 255, 0)");
+    colorChanger === 4 && (visualsPanel.style.color = "rgb(255, 0, 0)", colorChanger = 0);
 }
 
+const transitionCarrouselOff = () => {
+    transitionCenter();
+    intervalCarrousel = clearInterval(intervalCarrousel);
+}
+
+const transitionCarrouselOn = () => {
+        intervalCarrousel && clearInterval(intervalCarrousel);
+        intervalCarrousel = setInterval(transitionCarrouselOn, 3000);
+        carrouselChanger += 1;
+        carrouselChanger === 1 && (transitionLeft());
+        carrouselChanger === 2 && (transitionCenter());
+        carrouselChanger === 3 && (transitionRight());
+        carrouselChanger === 4 && (transitionCenter(), carrouselChanger = 0);
+}
+
+// Interval BPM
+intervalBpm && clearInterval(intervalBpm);
+intervalBpm = setInterval(generateSymbols, calculateBpm);
+
 const fontFx = () => {
-    alternate = !alternate;
     alternate ? (
         visualsPanel.style.textShadow = "50px 50px",
         visualsPanel.style.marginLeft = "50px"
     ) : (
         visualsPanel.style.textShadow = "",
         visualsPanel.style.marginLeft = "0px"
-
     );
+    alternate = !alternate;
 }
 
 const transitionLeft = () => {
-    visualsPanel.style.transition = "all 3s ease-in-out 0s";
     visualsPanel.style.transform = "matrix3d(1,0,0.00,0.002,0.00,1,0.00,0,0,0,1,0,0,0,0,1";
-    visualsPanel.style.transformOrigin = "center center 0px"; 
+    visualsPanel.style.transformOrigin = "center center 0px";
 }
 
 const transitionCenter = () => {
-    visualsPanel.style.transition = "all 3s ease-in-out 0s";
     visualsPanel.style.transform = "matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1)";
-    visualsPanel.style.transformOrigin = "0px"; 
+    visualsPanel.style.transformOrigin = "0px";
 }
 
 const transitionRight = () => {
-    visualsPanel.style.transition = "all 3s ease-in-out 0s";
     visualsPanel.style.transform = "matrix3d(1,0,0.00,-0.002,0.00,1,0.00,0,0,0,1,0,0,0,0,1)";
-    visualsPanel.style.transformOrigin = "center center 0px"; 
+    visualsPanel.style.transformOrigin = "center center 0px";
 }
-
-btnColors.addEventListener("click", changeColor);
-btnFontFx.addEventListener("click", fontFx);
-btnTransitionLeft.addEventListener("click", transitionLeft);
-btnTransitionCenter.addEventListener("click", transitionCenter);
-btnTransitionRight.addEventListener("click", transitionRight);

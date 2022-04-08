@@ -4,6 +4,11 @@ body {
     font-family: 'IBM Plex Sans', sans-serif;
     overflow-y: hidden;
     position: relative;
+    background-color: #000;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .visuals {
@@ -15,17 +20,79 @@ body {
     font-size: 13px;
     font-weight: 300;
     word-wrap: break-word;
+    transition: all 2s ease-in-out 0s;
 }
 
-.btn-row {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    position: absolute;
-    left: 50px;
+.rotate-center {
+    -webkit-animation: rotate-center 3s ease-in-out infinite both;
+    animation: rotate-center 3s ease-in-out infinite both;
 }
 
-button.myButton{
-    background-color: #fff;
-    padding: 5px 20px;
+.ping {
+    -webkit-animation: ping 1.2s ease-in-out infinite alternate both;
+    animation: ping 1.2s ease-in-out infinite alternate both;
+}
+
+@-webkit-keyframes rotate-center {
+    0% {
+        -webkit-transform: rotate(0);
+        transform: rotate(0);
+    }
+
+    100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes rotate-center {
+    0% {
+        -webkit-transform: rotate(0);
+        transform: rotate(0);
+    }
+
+    100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+
+@-webkit-keyframes ping {
+    0% {
+        -webkit-transform: scale(0.2);
+        transform: scale(0.2);
+        opacity: 1;
+    }
+
+    80% {
+        -webkit-transform: scale(1.2);
+        transform: scale(1.2);
+        opacity: 0.5;
+    }
+
+    100% {
+        -webkit-transform: scale(2.2);
+        transform: scale(2.2);
+        opacity: 0;
+    }
+}
+
+@keyframes ping {
+    0% {
+        -webkit-transform: scale(0.2);
+        transform: scale(0.2);
+        opacity: 1;
+    }
+
+    80% {
+        -webkit-transform: scale(1.2);
+        transform: scale(1.2);
+        opacity: 0.5;
+    }
+
+    100% {
+        -webkit-transform: scale(2.2);
+        transform: scale(2.2);
+        opacity: 0;
+    }
 }
